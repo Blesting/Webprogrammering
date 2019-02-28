@@ -149,11 +149,13 @@ def create_track_real():
         c.execute('''
                        SELECT * FROM tracks
                        ''')
+        print("----Tracks----")
         for i in c:
             print(i)
         c.execute('''
                        SELECT * FROM users
                        ''')
+        print("----Users----")
         for i in c:
             print(i)
     
@@ -164,6 +166,80 @@ def create_track_real():
 @app.route("/create_tables")
 def create_tables():
     c = get_db().cursor()
+    try:
+        c.execute(''' 
+                               CREATE TABLE users(
+                               Id INTEGER PRIMARY KEY AUTOINCREMENT,
+                               name TEXT,
+                               age INTEGER,
+                               gender INTEGER,
+                               password TEXT,
+                               email TEXT
+                               );
+                               ''')
+        print("---------------------------------------------------SUCCESS---------------------------------------------------")
+    except Exception as e:
+        print("---------------------------------------------------ERROR---------------------------------------------------")
+        print(e)
+    try:
+        c.execute(''' 
+                               CREATE TABLE tracks(
+                               Id INTEGER PRIMARY KEY AUTOINCREMENT,
+                               user_id INTEGER,
+                               active INTEGER,
+                               type INTEGER,
+                               name TEXT,
+                               date TEXT
+                               );
+                               ''')
+        print("---------------------------------------------------SUCCESS---------------------------------------------------")
+    except Exception as e:
+        print("---------------------------------------------------ERROR---------------------------------------------------")
+        print(e)
+    try:
+        c.execute(''' 
+                               CREATE TABLE trackvars(
+                               Id INTEGER PRIMARY KEY AUTOINCREMENT,
+                               var_id INTEGER,
+                               starttime TEXT,
+                               endtime TEXT,
+                               value INT
+                               );
+                               ''')
+        print("---------------------------------------------------SUCCESS---------------------------------------------------")
+    except Exception as e:
+        print("---------------------------------------------------ERROR---------------------------------------------------")
+        print(e)
+
+    return "cool"                 
+
+@app.route("/clear_tables")
+def clear_tables():
+    c = get_db().cursor()
+    try:
+        c.execute(''' 
+                               DROP TABLE users;
+                               ''')
+        print("---------------------------------------------------SUCCESS---------------------------------------------------")
+    except Exception as e:
+        print("---------------------------------------------------ERROR---------------------------------------------------")
+        print(e)
+    try:
+        c.execute(''' 
+                               DROP TABLE tracks;
+                               ''')
+        print("---------------------------------------------------SUCCESS---------------------------------------------------")
+    except Exception as e:
+        print("---------------------------------------------------ERROR---------------------------------------------------")
+        print(e)
+    try:
+        c.execute(''' 
+                               DROP TABLE trackvars;
+                               ''')
+        print("---------------------------------------------------SUCCESS---------------------------------------------------")
+    except Exception as e:
+        print("---------------------------------------------------ERROR---------------------------------------------------")
+        print(e)
     try:
         c.execute(''' 
                                CREATE TABLE users(
