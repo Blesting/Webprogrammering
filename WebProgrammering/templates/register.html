@@ -1,0 +1,27 @@
+{% extends "layout.html" %}
+{% block content %}
+    <h1>Register</h1>
+    {% if success == False %}
+      <div class="alert alert-danger hide" role="alert">Username already in use</div>
+    {% endif %}
+    <form action="create_user" method="post">
+        <div class="form-group">
+        <input type="text" name="username" id="username" tabindex="1" class="form-control" placeholder="Brugernavn" value=""  required>
+        </div>
+        <div class="form-group">
+        <input type="password" name="password" id="password" tabindex="2" class="form-control" placeholder="Kodeord" required>
+        </div>
+        <div class="form-group">
+        <input type="email" name="email" id="email" tabindex="3" class="form-control" placeholder="E-mail">
+        </div>
+        <div class="form-group">
+        <input type="text" name="age" id="age" tabindex="4" class="form-control" placeholder="Alder">
+        </div>
+        <div class="form-group">
+        <select name="køn" id="køn" tabindex="5" class="form-control" placeholder="Køn">
+          <option value="0">Mand</option>
+          <option value="1">Kvinde</option>
+        </select>
+        <input type="submit" tabindex="6">
+    </form>
+{% endblock content %}

@@ -1,0 +1,21 @@
+{% extends "layout.html" %}
+{% block content %}
+    <h1>Register</h1>
+    {% if success == False %}
+      <div class="alert alert-danger hide" role="alert">Trackname already in use</div>
+    {% endif %}
+    <form action="create_track_real" method="post">
+        <div class="form-group">
+        <input type="text" name="trackname" id="trackname" tabindex="1" class="form-control" placeholder="Track name" value="" required>
+        </div>
+        <div class="form-group">
+        <select name="type" id="type" tabindex="5" class="form-control" placeholder="Type">
+          <option value="0">Værdi</option>
+        </select>
+        </div>
+        <div class="form-group">
+        <input type="date" id="dato" name="date" class="form-control">
+        </div>
+        <input type="submit" tabindex="6">
+    </form>
+{% endblock content %}
