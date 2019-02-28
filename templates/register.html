@@ -1,9 +1,15 @@
 {% extends "layout.html" %}
 {% block content %}
-    <h1>Register</h1>
+<div class="row box" id="login-box">
+<div class="col-md-6 col-md-offset-3">
+<div class="panel panel-login">
+<div class="panel-body">
+  <div class="row">
+  <div class="col-lg-12">
     {% if success == False %}
       <div class="alert alert-danger hide" role="alert">Username already in use</div>
     {% endif %}
+    <h1>Register</h1>
     <form action="create_user" method="post">
         <div class="form-group">
         <input type="text" name="username" id="username" tabindex="1" class="form-control" placeholder="Brugernavn" value=""  required>
@@ -24,4 +30,12 @@
         </select>
         <input type="submit" tabindex="6">
     </form>
+  </div>
+  </div>
+</div>
+<div class="panel-heading">
+</div>
+</div>
+</div>
+</div>
 {% endblock content %}
