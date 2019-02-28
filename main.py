@@ -307,5 +307,3 @@ def close_connection(exception):
 if __name__ == "__main__":
     app.run(debug=True)  
     
-'''Hello Git'''
-'''Hello back'''
