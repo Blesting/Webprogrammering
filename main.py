@@ -35,6 +35,7 @@ def about():
 
 @app.route("/register")
 def register():
+    #TODO fix visning
     return my_render("register.html")
 
 @app.route("/create_user", methods=["POST"])
@@ -71,7 +72,6 @@ def create_user():
 
 
 def get_user_id(user):
-    #TODO: Use the database to fetch id
     ID = get_db().cursor().execute('''SELECT Id FROM Users WHERE name = ?''',user)
     print("-------------------------------------------------------------------------------------")
     return ID.fetchone()[0]
@@ -93,7 +93,7 @@ def login_try():
         ID=get_user_id(user)
         print(ID)
         session['currentuser'] = ID
-        return my_render('home.html', posts=posts)
+        return my_render('home.html', posts=posts, tracks=get_tracks())
     else:
         session.pop('currentuser', None)
         return my_render('login.html', success = False) 
@@ -122,15 +122,15 @@ def my_render(template, **kwargs):
 
 @app.route('/create_track')
 def create_track():
-    return my_render("track.html")
+    return my_render("track.html", tracks=get_tracks())
 
 @app.route("/create_track_real", methods=["POST"])
 def create_track_real():
     print(request.form["trackname"])    
     c = get_db().cursor()
     c.execute('''
-              SELECT name FROM tracks
-              ''')
+              SELECT name FROM tracks WHERE user_id=?
+              ''',str(session['currentuser']))
     x = 0
     for i in c:
         print(i)
@@ -159,12 +159,29 @@ def create_track_real():
         for i in c:
             print(i)
     
-        return my_render("login.html")
+        return my_render("my_tracks.html", tracks=get_tracks())
     else:
-        return my_render('track.html', success = False)
+        return my_render('track.html', success = False, tracks=get_tracks())
+    
+@app.route("/my_tracks")
+def my_tracks():
+    return my_render("my_tracks.html", tracks=get_tracks())
+
+def get_tracks():
+    c = get_db().cursor()
+    c.execute('''
+              SELECT * FROM tracks WHERE user_id=?
+              ''',str(session['currentuser']))
+    tracks = []
+    for track in c:
+        print(track[4])
+        tracks.append(track)
+        
+    return tracks
 
 @app.route("/create_tables")
 def create_tables():
+    #TODO hide
     c = get_db().cursor()
     try:
         c.execute(''' 
@@ -186,9 +203,9 @@ def create_tables():
                                CREATE TABLE tracks(
                                Id INTEGER PRIMARY KEY AUTOINCREMENT,
                                user_id INTEGER,
+                               name TEXT,
                                active INTEGER,
                                type INTEGER,
-                               name TEXT,
                                date TEXT
                                );
                                ''')
@@ -200,7 +217,7 @@ def create_tables():
         c.execute(''' 
                                CREATE TABLE trackvars(
                                Id INTEGER PRIMARY KEY AUTOINCREMENT,
-                               var_id INTEGER,
+                               track_id INTEGER,
                                starttime TEXT,
                                endtime TEXT,
                                value INT
@@ -260,9 +277,9 @@ def clear_tables():
                                CREATE TABLE tracks(
                                Id INTEGER PRIMARY KEY AUTOINCREMENT,
                                user_id INTEGER,
+                               name TEXT,
                                active INTEGER,
                                type INTEGER,
-                               name TEXT,
                                date TEXT
                                );
                                ''')
@@ -274,7 +291,7 @@ def clear_tables():
         c.execute(''' 
                                CREATE TABLE trackvars(
                                Id INTEGER PRIMARY KEY AUTOINCREMENT,
-                               var_id INTEGER,
+                               track_id INTEGER,
                                starttime TEXT,
                                endtime TEXT,
                                value INT
@@ -286,6 +303,86 @@ def clear_tables():
         print(e)
 
     return "cool"                 
+@app.route("/clear_users")
+def clear_users():
+    c = get_db().cursor()
+    try:
+        c.execute(''' 
+                               DROP TABLE users;
+                               ''')
+        print("---------------------------------------------------SUCCESS---------------------------------------------------")
+    except Exception as e:
+        print("---------------------------------------------------ERROR---------------------------------------------------")
+        print(e)
+
+    try:
+        c.execute(''' 
+                               CREATE TABLE users(
+                               Id INTEGER PRIMARY KEY AUTOINCREMENT,
+                               name TEXT,
+                               age INTEGER,
+                               gender INTEGER,
+                               password TEXT,
+                               email TEXT
+                               );
+                               ''')
+        print("---------------------------------------------------SUCCESS---------------------------------------------------")
+    except Exception as e:
+        print("---------------------------------------------------ERROR---------------------------------------------------")
+        print(e)
+
+
+    return "cool"
+@app.route("/clear_tracks")
+def clear_tracks():
+    c = get_db().cursor()
+    try:
+        c.execute(''' 
+                               DROP TABLE tracks;
+                               ''')
+        print("---------------------------------------------------SUCCESS---------------------------------------------------")
+    except Exception as e:
+        print("---------------------------------------------------ERROR---------------------------------------------------")
+        print(e)
+    try:
+        c.execute(''' 
+                               DROP TABLE trackvars;
+                               ''')
+        print("---------------------------------------------------SUCCESS---------------------------------------------------")
+    except Exception as e:
+        print("---------------------------------------------------ERROR---------------------------------------------------")
+        print(e)
+    try:
+        c.execute(''' 
+                               CREATE TABLE tracks(
+                               Id INTEGER PRIMARY KEY AUTOINCREMENT,
+                               user_id INTEGER,
+                               name TEXT,
+                               active INTEGER,
+                               type INTEGER,
+                               date TEXT
+                               );
+                               ''')
+        print("---------------------------------------------------SUCCESS---------------------------------------------------")
+    except Exception as e:
+        print("---------------------------------------------------ERROR---------------------------------------------------")
+        print(e)
+    try:
+        c.execute(''' 
+                               CREATE TABLE trackvars(
+                               Id INTEGER PRIMARY KEY AUTOINCREMENT,
+                               track_id INTEGER,
+                               starttime TEXT,
+                               endtime TEXT,
+                               value INT
+                               );
+                               ''')
+        print("---------------------------------------------------SUCCESS---------------------------------------------------")
+    except Exception as e:
+        print("---------------------------------------------------ERROR---------------------------------------------------")
+        print(e)
+
+    return "cool"
 
 DATABASE = "ontrack.db"
 

@@ -1,0 +1,17 @@
+{% extends "layout.html" %}
+{% block content %}
+    {% for track in tracks %}
+        <article class="media content-section">
+          <div class="media-body">
+            <div class="article-metadata">
+              <a class="mr-2" href="#">{{ track[2] }}</a>
+              <small class="text-muted">{{ track[2] }}</small>
+            </div>
+            <h2><a class="article-title" href="#">{{ track[2] }}</a></h2>
+            <p class="article-content">{{ track[2] }}</p>
+          </div>
+        </article>
+    {% endfor %}
+    <a input="button" class="nav-item nav-link" href="/create_track">Opret track</a>
+    
+{% endblock content %}

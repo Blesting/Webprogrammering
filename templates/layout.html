@@ -33,7 +33,7 @@
             <div class="navbar-nav">
               {% if loggedin == True %}
                 <a class="nav-item nav-link" href="/logout">Log ud</a>
-                <a class="nav-item nav-link" href="/create_track">Opret track</a>
+                <a class="nav-item nav-link" href="/my_tracks">Mine tracks</a>
               {% else %}
                 <a class="nav-item nav-link" href="/login">Login</a>
               {% endif %}   
@@ -53,10 +53,9 @@
           {% if loggedin == True %}
             <h3>Dine tracks</h3>
               <ul class="list-group">
-                <li class="list-group-item list-group-item-light">Track 1</li>
-                <li class="list-group-item list-group-item-light">Track 2</li>
-                <li class="list-group-item list-group-item-light">Track 3</li>
-                <li class="list-group-item list-group-item-light">Track 4</li>
+              {% for track in tracks %}
+                <li class="list-group-item list-group-item-light">{{ track[2] }}</li>
+                {% endfor %}
               </ul>
             </p>
           {% else %}
