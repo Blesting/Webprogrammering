@@ -3,6 +3,8 @@ app = Flask(__name__)
 import sqlite3
 from flask import g
 from flask import request
+import datetime
+print(datetime.datetime.now().date())
 
 posts = [
         {
@@ -35,7 +37,6 @@ def about():
 
 @app.route("/register")
 def register():
-    #TODO fix visning
     return my_render("register.html")
 
 @app.route("/create_user", methods=["POST"])
@@ -93,7 +94,7 @@ def login_try():
         ID=get_user_id(user)
         print(ID)
         session['currentuser'] = ID
-        return my_render('home.html', posts=posts, tracks=get_tracks())
+        return my_render('home.html', posts=posts)
     else:
         session.pop('currentuser', None)
         return my_render('login.html', success = False) 
@@ -118,11 +119,11 @@ def logout():
 
 def my_render(template, **kwargs):
     login_status = get_login_status()
-    return render_template(template, loggedin=login_status, **kwargs)
+    return render_template(template, loggedin=login_status, **kwargs, tracks=get_tracks())
 
 @app.route('/create_track')
 def create_track():
-    return my_render("track.html", tracks=get_tracks())
+    return my_render("track.html", )
 
 @app.route("/create_track_real", methods=["POST"])
 def create_track_real():
@@ -138,12 +139,13 @@ def create_track_real():
              x += 1
     print(x)
     if x == 0:
+        date = datetime.datetime.now().date()
         c.execute('''
                    INSERT INTO tracks
-                   (name, type, user_id)
+                   (name, type, user_id, date)
                    VALUES
-                   (?, ?, ?);
-                   ''',(request.form["trackname"],request.form["type"], session['currentuser']))
+                   (?, ?, ?, ?);
+                   ''',(request.form["trackname"],request.form["type"], session['currentuser'], date))
         
         get_db().commit()
         c.execute('''
@@ -159,17 +161,18 @@ def create_track_real():
         for i in c:
             print(i)
     
-        return my_render("my_tracks.html", tracks=get_tracks())
+        return my_render("my_tracks.html")
     else:
-        return my_render('track.html', success = False, tracks=get_tracks())
+        return my_render('track.html', success = False)
     
 @app.route("/my_tracks")
 def my_tracks():
-    return my_render("my_tracks.html", tracks=get_tracks())
+    return my_render("my_tracks.html")
 
 def get_tracks():
     c = get_db().cursor()
-    c.execute('''
+    if 'currentuser' in session:
+        c.execute('''
               SELECT * FROM tracks WHERE user_id=?
               ''',str(session['currentuser']))
     tracks = []

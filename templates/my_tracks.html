@@ -4,8 +4,12 @@
         <article class="media content-section">
           <div class="media-body">
             <div class="article-metadata">
-              <a class="mr-2" href="#">{{ track[2] }}</a>
-              <small class="text-muted">{{ track[2] }}</small>
+            {% if track[4] == 0 %}
+              <a class="mr-2">Type: Value</a>
+            {% elif track[4] == 1 %}
+              <a class="mr-2">Type: Time</a>
+              {% endif %}
+              <small class="text-muted">made: {{ track[5] }}</small>
             </div>
             <h2><a class="article-title" href="#">{{ track[2] }}</a></h2>
             <p class="article-content">{{ track[2] }}</p>
