@@ -182,6 +182,36 @@ def get_tracks():
         
     return tracks
 
+@app.route("/create_var", methods=["POST"])
+def create_var():  
+    
+    c = get_db().cursor()
+    
+    c.execute('''
+               INSERT INTO trackvars
+               (track_id, starttime, value)
+               VALUES
+               (?, ?, ?);
+               ''',(1,request.form["dato"], request.form["var"]))
+    
+    get_db().commit()
+    c.execute('''
+                   SELECT * FROM tracks
+                   ''')
+    print("----Tracks----")
+    for i in c:
+        print(i)
+    c.execute('''
+                   SELECT * FROM users
+                   ''')
+    print("----Users----")
+    for i in c:
+        print(i)
+    
+    return my_render("my_tracks.html")
+   
+
+
 @app.route("/create_tables")
 def create_tables():
     #TODO hide
