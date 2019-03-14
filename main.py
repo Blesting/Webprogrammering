@@ -4,6 +4,8 @@ import sqlite3
 from flask import g
 from flask import request
 import datetime
+import tables
+
 print(datetime.datetime.now().date())
 
 posts = [
@@ -90,9 +92,7 @@ def login_try():
     user = request.form['username']
 
     if login_success(user, pw):
-        #TODO create user object, store in session.
         ID=get_user_id(user)
-        print(ID)
         session['currentuser'] = ID
         return my_render('home.html', posts=posts)
     else:
@@ -119,7 +119,13 @@ def logout():
 
 def my_render(template, **kwargs):
     login_status = get_login_status()
-    return render_template(template, loggedin=login_status, **kwargs, tracks=get_tracks())
+    tracks=get_tracks()
+    if len(tracks) < 1:
+        noTracks = True
+    else:
+        noTracks = False
+    print("---------------------------------------" + str(noTracks))
+    return render_template(template, tracks=tracks, noTracks=noTracks, loggedin=login_status, **kwargs)
 
 @app.route('/create_track')
 def create_track():
@@ -182,25 +188,21 @@ def get_tracks():
         
     return tracks
 
-@app.route("/create_var", methods=["POST"])
+@app.route("/create_var", methods=["GET","POST"])
 def create_var():  
     
     c = get_db().cursor()
+    print(request.args.get("id"))
     
     c.execute('''
                INSERT INTO trackvars
                (track_id, starttime, value)
                VALUES
                (?, ?, ?);
-               ''',(1,request.form["dato"], request.form["var"]))
+               ''',(request.args.get("id"),request.form["dato"], request.form["var"]))
     
     get_db().commit()
-    c.execute('''
-                   SELECT * FROM tracks
-                   ''')
-    print("----Tracks----")
-    for i in c:
-        print(i)
+    
     c.execute('''
                    SELECT * FROM users
                    ''')
@@ -208,215 +210,54 @@ def create_var():
     for i in c:
         print(i)
     
+    c.execute('''
+                   SELECT * FROM tracks
+                   ''')
+    print("----Tracks----")
+    for i in c:
+        print(i)
+    
+        
+    c.execute('''
+              SELECT * FROM trackvars
+              ''')
+    
+    print("----Trackvars----")
+    for i in c:
+        print(i)
+    
     return my_render("my_tracks.html")
    
+
+            #TODO grafer i my_tracks
+            #TODO links i sidebar
+            #TODO liste over trackvars
 
 
 @app.route("/create_tables")
 def create_tables():
-    #TODO hide
     c = get_db().cursor()
-    try:
-        c.execute(''' 
-                               CREATE TABLE users(
-                               Id INTEGER PRIMARY KEY AUTOINCREMENT,
-                               name TEXT,
-                               age INTEGER,
-                               gender INTEGER,
-                               password TEXT,
-                               email TEXT
-                               );
-                               ''')
-        print("---------------------------------------------------SUCCESS---------------------------------------------------")
-    except Exception as e:
-        print("---------------------------------------------------ERROR---------------------------------------------------")
-        print(e)
-    try:
-        c.execute(''' 
-                               CREATE TABLE tracks(
-                               Id INTEGER PRIMARY KEY AUTOINCREMENT,
-                               user_id INTEGER,
-                               name TEXT,
-                               active INTEGER,
-                               type INTEGER,
-                               date TEXT
-                               );
-                               ''')
-        print("---------------------------------------------------SUCCESS---------------------------------------------------")
-    except Exception as e:
-        print("---------------------------------------------------ERROR---------------------------------------------------")
-        print(e)
-    try:
-        c.execute(''' 
-                               CREATE TABLE trackvars(
-                               Id INTEGER PRIMARY KEY AUTOINCREMENT,
-                               track_id INTEGER,
-                               starttime TEXT,
-                               endtime TEXT,
-                               value INT
-                               );
-                               ''')
-        print("---------------------------------------------------SUCCESS---------------------------------------------------")
-    except Exception as e:
-        print("---------------------------------------------------ERROR---------------------------------------------------")
-        print(e)
-
+    tables.create_tables(c)
     return "cool"                 
 
 @app.route("/clear_tables")
 def clear_tables():
     c = get_db().cursor()
-    try:
-        c.execute(''' 
-                               DROP TABLE users;
-                               ''')
-        print("---------------------------------------------------SUCCESS---------------------------------------------------")
-    except Exception as e:
-        print("---------------------------------------------------ERROR---------------------------------------------------")
-        print(e)
-    try:
-        c.execute(''' 
-                               DROP TABLE tracks;
-                               ''')
-        print("---------------------------------------------------SUCCESS---------------------------------------------------")
-    except Exception as e:
-        print("---------------------------------------------------ERROR---------------------------------------------------")
-        print(e)
-    try:
-        c.execute(''' 
-                               DROP TABLE trackvars;
-                               ''')
-        print("---------------------------------------------------SUCCESS---------------------------------------------------")
-    except Exception as e:
-        print("---------------------------------------------------ERROR---------------------------------------------------")
-        print(e)
-    try:
-        c.execute(''' 
-                               CREATE TABLE users(
-                               Id INTEGER PRIMARY KEY AUTOINCREMENT,
-                               name TEXT,
-                               age INTEGER,
-                               gender INTEGER,
-                               password TEXT,
-                               email TEXT
-                               );
-                               ''')
-        print("---------------------------------------------------SUCCESS---------------------------------------------------")
-    except Exception as e:
-        print("---------------------------------------------------ERROR---------------------------------------------------")
-        print(e)
-    try:
-        c.execute(''' 
-                               CREATE TABLE tracks(
-                               Id INTEGER PRIMARY KEY AUTOINCREMENT,
-                               user_id INTEGER,
-                               name TEXT,
-                               active INTEGER,
-                               type INTEGER,
-                               date TEXT
-                               );
-                               ''')
-        print("---------------------------------------------------SUCCESS---------------------------------------------------")
-    except Exception as e:
-        print("---------------------------------------------------ERROR---------------------------------------------------")
-        print(e)
-    try:
-        c.execute(''' 
-                               CREATE TABLE trackvars(
-                               Id INTEGER PRIMARY KEY AUTOINCREMENT,
-                               track_id INTEGER,
-                               starttime TEXT,
-                               endtime TEXT,
-                               value INT
-                               );
-                               ''')
-        print("---------------------------------------------------SUCCESS---------------------------------------------------")
-    except Exception as e:
-        print("---------------------------------------------------ERROR---------------------------------------------------")
-        print(e)
-
+    tables.clear(c)
     return "cool"                 
+                   
 @app.route("/clear_users")
 def clear_users():
     c = get_db().cursor()
-    try:
-        c.execute(''' 
-                               DROP TABLE users;
-                               ''')
-        print("---------------------------------------------------SUCCESS---------------------------------------------------")
-    except Exception as e:
-        print("---------------------------------------------------ERROR---------------------------------------------------")
-        print(e)
-
-    try:
-        c.execute(''' 
-                               CREATE TABLE users(
-                               Id INTEGER PRIMARY KEY AUTOINCREMENT,
-                               name TEXT,
-                               age INTEGER,
-                               gender INTEGER,
-                               password TEXT,
-                               email TEXT
-                               );
-                               ''')
-        print("---------------------------------------------------SUCCESS---------------------------------------------------")
-    except Exception as e:
-        print("---------------------------------------------------ERROR---------------------------------------------------")
-        print(e)
-
-
+    tables.clear_users(c)
     return "cool"
+    
 @app.route("/clear_tracks")
 def clear_tracks():
     c = get_db().cursor()
-    try:
-        c.execute(''' 
-                               DROP TABLE tracks;
-                               ''')
-        print("---------------------------------------------------SUCCESS---------------------------------------------------")
-    except Exception as e:
-        print("---------------------------------------------------ERROR---------------------------------------------------")
-        print(e)
-    try:
-        c.execute(''' 
-                               DROP TABLE trackvars;
-                               ''')
-        print("---------------------------------------------------SUCCESS---------------------------------------------------")
-    except Exception as e:
-        print("---------------------------------------------------ERROR---------------------------------------------------")
-        print(e)
-    try:
-        c.execute(''' 
-                               CREATE TABLE tracks(
-                               Id INTEGER PRIMARY KEY AUTOINCREMENT,
-                               user_id INTEGER,
-                               name TEXT,
-                               active INTEGER,
-                               type INTEGER,
-                               date TEXT
-                               );
-                               ''')
-        print("---------------------------------------------------SUCCESS---------------------------------------------------")
-    except Exception as e:
-        print("---------------------------------------------------ERROR---------------------------------------------------")
-        print(e)
-    try:
-        c.execute(''' 
-                               CREATE TABLE trackvars(
-                               Id INTEGER PRIMARY KEY AUTOINCREMENT,
-                               track_id INTEGER,
-                               starttime TEXT,
-                               endtime TEXT,
-                               value INT
-                               );
-                               ''')
-        print("---------------------------------------------------SUCCESS---------------------------------------------------")
-    except Exception as e:
-        print("---------------------------------------------------ERROR---------------------------------------------------")
-        print(e)
-
+    tables.clear_tracks(c)
     return "cool"
-
+    
 DATABASE = "ontrack.db"
 
 
