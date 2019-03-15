@@ -32,13 +32,45 @@
                   <input type="hidden" id="var" name="var" class="form-control" placeholder="Ny var" value="None">
                   </div>
                   <div class="form-group">
-                  <input type="date" id="dato" name="dato" class="form-control" placeholder="Ny var">
+                  <input type="time" id="dato" name="dato" class="form-control" placeholder="Ny var">
+                  </div>
+                </div>
+                {% elif track[4] == 2 %}
+                <div class="form-group">
+                  <div class="form-group">
+                  <input type="hidden" id="var" name="var" class="form-control" placeholder="Ny var" value="None">
+                  </div>
+                  <div class="form-group">
+                  <input type="hidden" id="dato" name="dato" class="form-control" placeholder="Ny var" value="None">
+                  </div>
+                  <div>
+                    <label class="form-control container">
+                      <div class="btn-group">1  
+                      <input type="radio" checked="checked" name="radio" >
+                      <span class="checkmark"></span>
+                      <input type="radio" name="radio" >  
+                      <span class="checkmark"></span>
+                      <input type="radio" name="radio">  
+                      <span class="checkmark"></span>
+                      <input type="radio" name="radio">
+                      <span class="checkmark"></span>
+                      <input type="radio" name="radio">
+                      <span class="checkmark"></span>
+                      <input type="radio" name="radio">
+                      <span class="checkmark"></span>
+                      <input type="radio" name="radio">
+                      <span class="checkmark"></span>5
+                      </div>
+                    </label>
                   </div>
                 </div>
                 {% endif %}
-                <input type="submit" class="form-control btn btn-login" value="Tilføj Var"></input>
+                <input type="submit" class="form-control btn btn-login alert-info" value="Tilføj Var"></input>
               </article>
              </form>
+            <form action="delete_track?id={{ track[0] }}" method="post">
+            <input type="submit" class="form-control btn btn-login alert-danger" value="slet track"></input>
+            </form>
           </div>
         </article>
         

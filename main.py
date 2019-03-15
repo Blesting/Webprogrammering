@@ -148,10 +148,10 @@ def create_track_real():
         date = datetime.datetime.now().date()
         c.execute('''
                    INSERT INTO tracks
-                   (name, type, user_id, date)
+                   (name, type, user_id, createdate, unit)
                    VALUES
-                   (?, ?, ?, ?);
-                   ''',(request.form["trackname"],request.form["type"], session['currentuser'], date))
+                   (?, ?, ?, ?, ?);
+                   ''',(request.form["trackname"],request.form["type"], session['currentuser'], date, "nooo"))
         
         get_db().commit()
         c.execute('''
@@ -196,10 +196,10 @@ def create_var():
     
     c.execute('''
                INSERT INTO trackvars
-               (track_id, starttime, value)
+               (track_id, starttime, value, postdate)
                VALUES
-               (?, ?, ?);
-               ''',(request.args.get("id"),request.form["dato"], request.form["var"]))
+               (?, ?, ?, ?);
+               ''',(request.args.get("id"),request.form["dato"], request.form["var"], datetime.datetime.now().date()))
     
     get_db().commit()
     
@@ -227,11 +227,22 @@ def create_var():
         print(i)
     
     return my_render("my_tracks.html")
+
+@app.route("/delete_track", methods=["GET", "POST"])
+def delete_track():
+    c = get_db().cursor()
+    c.execute('''
+               DELETE FROM tracks WHERE Id=?
+               ''',request.args.get("id"))
+    get_db().commit()
+    
+    return my_render("my_tracks.html")
    
 
             #TODO grafer i my_tracks
-            #TODO links i sidebar
-            #TODO liste over trackvars
+                #TODO liste over trackvars
+            #TODO https://www.w3schools.com/howto/howto_css_custom_checkbox.asp
+            #TODO 400 Bad Request: KeyError: 'unit'
 
 
 @app.route("/create_tables")

@@ -58,13 +58,21 @@
         <div class="col-md-4">
           <div class="content-section">
           {% if loggedin == True %}
+            {% if noTracks == False %}
             <h3>Dine tracks</h3>
               <ul class="list-group">
               {% for track in tracks %}
-                <li class="list-group-item list-group-item-light">{{ track[2] }}</li>
+                <a class="list-group-item list-group-item-light" href="#">{{ track[2] }}</a>
                 {% endfor %}
               </ul>
             </p>
+            {% else %}
+            <h3>Dine tracks</h3>
+              <ul class="list-group">
+                <li class="list-group-item list-group-item-light">Du har ikke oprettet nogle tracks endnu</li>
+              </ul>
+            </p>
+            {% endif %}
           {% else %}
             <h3>When are you happiest?</h3>
             <p class='text-muted'>Is it when you...

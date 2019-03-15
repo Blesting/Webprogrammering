@@ -51,9 +51,9 @@ def clear_tables(c):
                                Id INTEGER PRIMARY KEY AUTOINCREMENT,
                                user_id INTEGER,
                                name TEXT,
-                               active INTEGER,
+                               unit TEXT,
                                type INTEGER,
-                               date TEXT
+                               createdate TEXT
                                );
                                ''')
         print("---------------------------------------------------SUCCESS---------------------------------------------------")
@@ -66,7 +66,7 @@ def clear_tables(c):
                                Id INTEGER PRIMARY KEY AUTOINCREMENT,
                                track_id INTEGER,
                                starttime TEXT,
-                               endtime TEXT,
+                               postdate TEXT,
                                value INT
                                );
                                ''')
@@ -98,9 +98,9 @@ def create_tables(c):
                                Id INTEGER PRIMARY KEY AUTOINCREMENT,
                                user_id INTEGER,
                                name TEXT,
-                               active INTEGER,
+                               unit TEXT,
                                type INTEGER,
-                               date TEXT
+                               createdate TEXT
                                );
                                ''')
         print("---------------------------------------------------SUCCESS---------------------------------------------------")
@@ -113,7 +113,7 @@ def create_tables(c):
                                Id INTEGER PRIMARY KEY AUTOINCREMENT,
                                track_id INTEGER,
                                starttime TEXT,
-                               endtime TEXT,
+                               postdate TEXT,
                                value INT
                                );
                                ''')
@@ -174,9 +174,9 @@ def clear_tracks(c):
                                Id INTEGER PRIMARY KEY AUTOINCREMENT,
                                user_id INTEGER,
                                name TEXT,
-                               active INTEGER,
+                               unit TEXT,
                                type INTEGER,
-                               date TEXT
+                               createdate TEXT
                                );
                                ''')
         print("---------------------------------------------------SUCCESS---------------------------------------------------")
@@ -189,7 +189,7 @@ def clear_tracks(c):
                                Id INTEGER PRIMARY KEY AUTOINCREMENT,
                                track_id INTEGER,
                                starttime TEXT,
-                               endtime TEXT,
+                               postdate TEXT,
                                value INT
                                );
                                ''')

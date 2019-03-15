@@ -13,20 +13,43 @@
           <option value=""disabled selected>type</option>
           <option value="0">Værdi</option>
           <option value="1">Tidspunkt</option>
+          <option value="2">Skala</option>
         </select>
         </div>
         <div class="form-group">
-        <input type="date" id="dato" name="date" class="form-control" disabled>
+        <input type="text" id="unit" name="unit" class="form-control" placeholder="unit" value="" required disabled>
+        </div>
+        <div class="form-group">
+        <input type="number" id="scale" name="scale" class="form-control" placeholder="antal værdier" min="5" max="10" required disabled>
         </div>
         <input type="submit" tabindex="6">
+    <label class="container">1
+      <input type="radio" checked="checked" name="radio" >
+      <span class="checkmark"></span>
+      <input type="radio" name="radio">
+      <span class="checkmark"></span>
+      <input type="radio" name="radio">
+      <span class="checkmark"></span>
+      <input type="radio" name="radio">
+      <span class="checkmark"></span>
+      <input type="radio" name="radio">
+      <span class="checkmark"></span>5
+    </label> 
+    
     </form>
+       
     
     <script>
     $("#type").on('change', function(){
-        if(this.value == '1'){
-            $("#dato").prop('disabled', false);
-        } else if(this.value == '0'){
-            $("#dato").prop('disabled', true);
+        if(this.value == '0'){
+            $("#unit").prop('disabled', false);
+            $("#scale").prop('disabled', true);
+        } else if(this.value == '1'){
+            $("#unit").prop('disabled', true);
+            $("#scale").prop('disabled', true);
+        } else if(this.value == '2'){
+            $("#unit").prop('disabled', true);
+            $("#scale").prop('disabled', false);
         } else {
             
         }
