@@ -17,10 +17,10 @@
         </select>
         </div>
         <div class="form-group">
-        <input type="text" id="unit" name="unit" class="form-control" placeholder="unit" value="" required disabled>
+        <input type="text" id="unit" name="unit" class="form-control" placeholder="unit" value="7" required hidden>
         </div>
         <div class="form-group">
-        <input type="number" id="scale" name="scale" class="form-control" placeholder="antal værdier" min="5" max="10" required disabled>
+        <input type="number" id="scale" name="scale" class="form-control" placeholder="antal værdier" min="5" max="10" required hidden>
         </div>
         <input type="submit" tabindex="6">
     <label class="container">1
@@ -42,12 +42,18 @@
     <script>
     $("#type").on('change', function(){
         if(this.value == '0'){
+            $("#unit").prop('hidden', false);
+            $("#scale").prop('hidden', true);
             $("#unit").prop('disabled', false);
             $("#scale").prop('disabled', true);
         } else if(this.value == '1'){
+            $("#unit").prop('hidden', true);
+            $("#scale").prop('hidden', true);
             $("#unit").prop('disabled', true);
             $("#scale").prop('disabled', true);
         } else if(this.value == '2'){
+            $("#unit").prop('hidden', true);
+            $("#scale").prop('hidden', false);
             $("#unit").prop('disabled', true);
             $("#scale").prop('disabled', false);
         } else {

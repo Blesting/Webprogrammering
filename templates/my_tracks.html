@@ -11,7 +11,7 @@
               {% endif %}
               <small class="text-muted">made: {{ track[5] }}</small>
             </div>
-            <h2><a class="article-title" href="#">{{ track[2] }}</a></h2>
+            <h2><a class="article-title" href="my_tracks_show?id={{ track[0] }}">{{ track[2] }}</a></h2>
             <p class="article-content">trackvars</p>
 
            
@@ -20,16 +20,16 @@
                 {% if track[4] == 0 %}
                 <div class="form-group">
                   <div class="form-group">
-                  <input type="text" id="var" name="var" class="form-control" placeholder="Ny var">
+                  <input type="number" id="var" name="var" class="form-control" placeholder="Ny var">
                   </div>
                   <div class="form-group">
-                  <input type="hidden" id="dato" name="dato" class="form-control" placeholder="Ny var" value="None">
+                  <input type="time" id="dato" name="dato" class="form-control" placeholder="Ny var" value="None" hidden>
                   </div>
                 </div>
                 {% elif track[4] == 1 %}
                 <div class="form-group">
                   <div class="form-group">
-                  <input type="hidden" id="var" name="var" class="form-control" placeholder="Ny var" value="None">
+                  <input type="text" id="var" name="var" class="form-control" placeholder="Ny var" value="None" hidden>
                   </div>
                   <div class="form-group">
                   <input type="time" id="dato" name="dato" class="form-control" placeholder="Ny var">

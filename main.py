@@ -6,7 +6,6 @@ from flask import request
 import datetime
 import tables
 
-print(datetime.datetime.now().date())
 
 posts = [
         {
@@ -30,7 +29,6 @@ app.secret_key = 'very secret string'
 @app.route("/")
 @app.route("/home")
 def home():
-    print(get_login_status())
     return my_render("home.html", posts=posts)
 
 @app.route("/about")
@@ -43,6 +41,7 @@ def register():
 
 @app.route("/create_user", methods=["POST"])
 def create_user():
+    print("-----------------------------username-----------------------------")
     print(request.form["username"])    
     c = get_db().cursor()
     c.execute('''
@@ -50,10 +49,8 @@ def create_user():
               ''')
     x = 0
     for i in c:
-        print(i)
         if i[0] == request.form["username"]:
              x += 1
-    print(x)
     if x == 0:
         c.execute('''
                    INSERT INTO users
@@ -66,6 +63,7 @@ def create_user():
         c.execute('''
                        SELECT * FROM users
                        ''')
+        print("----------------------------------users----------------------------------")
         for i in c:
             print(i)
     
@@ -76,7 +74,6 @@ def create_user():
 
 def get_user_id(user):
     ID = get_db().cursor().execute('''SELECT Id FROM Users WHERE name = ?''',user)
-    print("-------------------------------------------------------------------------------------")
     return ID.fetchone()[0]
 
 def get_login_status():
@@ -104,9 +101,7 @@ def login_success(user, pw):
     c.execute('''
               SELECT password FROM users WHERE name=?
               ''',user)
-    print(c)
     for i in c:
-        print(i)
         if i[0] == pw:
             return True
         else:
@@ -124,7 +119,6 @@ def my_render(template, **kwargs):
         noTracks = True
     else:
         noTracks = False
-    print("---------------------------------------" + str(noTracks))
     return render_template(template, tracks=tracks, noTracks=noTracks, loggedin=login_status, **kwargs)
 
 @app.route('/create_track')
@@ -132,28 +126,48 @@ def create_track():
     return my_render("track.html", )
 
 @app.route("/create_track_real", methods=["POST"])
-def create_track_real():
-    print(request.form["trackname"])    
+def create_track_real(): 
     c = get_db().cursor()
     c.execute('''
               SELECT name FROM tracks WHERE user_id=?
               ''',str(session['currentuser']))
     x = 0
     for i in c:
-        print(i)
         if i[0] == request.form["trackname"]:
              x += 1
-    print(x)
+    tracktype = request.form["type"]
     if x == 0:
         date = datetime.datetime.now().date()
-        c.execute('''
-                   INSERT INTO tracks
-                   (name, type, user_id, createdate, unit)
-                   VALUES
-                   (?, ?, ?, ?, ?);
-                   ''',(request.form["trackname"],request.form["type"], session['currentuser'], date, "nooo"))
-        
-        get_db().commit()
+        if tracktype == "0":
+            c.execute('''
+                       INSERT INTO tracks
+                       (name, type, user_id, createdate, unit)
+                       VALUES
+                       (?, ?, ?, ?, ?);
+                       ''',(request.form["trackname"],tracktype, session['currentuser'], date, request.form["unit"]))
+            
+            get_db().commit()
+        elif tracktype == "1":
+            c.execute('''
+                       INSERT INTO tracks
+                       (name, type, user_id, createdate)
+                       VALUES
+                       (?, ?, ?, ?);
+                       ''',(request.form["trackname"],tracktype, session['currentuser'], date))
+            
+            get_db().commit()
+        elif tracktype == "2":
+            c.execute('''
+                       INSERT INTO tracks
+                       (name, type, user_id, createdate)
+                       VALUES
+                       (?, ?, ?, ?);
+                       ''',(request.form["trackname"],tracktype, session['currentuser'], date))
+            
+            get_db().commit()
+            
+            
+            
         c.execute('''
                        SELECT * FROM tracks
                        ''')
@@ -183,7 +197,6 @@ def get_tracks():
               ''',str(session['currentuser']))
     tracks = []
     for track in c:
-        print(track[4])
         tracks.append(track)
         
     return tracks
@@ -192,7 +205,6 @@ def get_tracks():
 def create_var():  
     
     c = get_db().cursor()
-    print(request.args.get("id"))
     
     c.execute('''
                INSERT INTO trackvars
@@ -233,17 +245,28 @@ def delete_track():
     c = get_db().cursor()
     c.execute('''
                DELETE FROM tracks WHERE Id=?
-               ''',request.args.get("id"))
+               ''',(request.args.get("id"),))
     get_db().commit()
     
     return my_render("my_tracks.html")
+
+@app.route("/my_tracks_show", methods=["GET", "POST"])
+def my_tracks_show():
+    c = get_db().cursor()
+    c.execute('''
+              SELECT * FROM trackvars WHERE track_id=?
+              ''',(request.args.get("id"),))
+    trackvars = []
+    for i in c:
+        trackvars.append(i)
+        
+    print(trackvars)
+    return my_render("my_tracks_show.html", trackvars=trackvars)
    
 
-            #TODO grafer i my_tracks
-                #TODO liste over trackvars
+            #TODO grafer i my_tracks. https://plot.ly/python/line-charts/
+            #TODO liste over trackvars
             #TODO https://www.w3schools.com/howto/howto_css_custom_checkbox.asp
-            #TODO 400 Bad Request: KeyError: 'unit'
-
 
 @app.route("/create_tables")
 def create_tables():
