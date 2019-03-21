@@ -53,7 +53,8 @@ def clear_tables(c):
                                name TEXT,
                                unit TEXT,
                                type INTEGER,
-                               createdate TEXT
+                               createdate TEXT,
+                               scalesize INT
                                );
                                ''')
         print("---------------------------------------------------SUCCESS---------------------------------------------------")
@@ -100,7 +101,8 @@ def create_tables(c):
                                name TEXT,
                                unit TEXT,
                                type INTEGER,
-                               createdate TEXT
+                               createdate TEXT,
+                               scalesize INT
                                );
                                ''')
         print("---------------------------------------------------SUCCESS---------------------------------------------------")
@@ -176,7 +178,8 @@ def clear_tracks(c):
                                name TEXT,
                                unit TEXT,
                                type INTEGER,
-                               createdate TEXT
+                               createdate TEXT,
+                               scalesize INT
                                );
                                ''')
         print("---------------------------------------------------SUCCESS---------------------------------------------------")

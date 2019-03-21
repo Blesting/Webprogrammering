@@ -159,10 +159,10 @@ def create_track_real():
         elif tracktype == "2":
             c.execute('''
                        INSERT INTO tracks
-                       (name, type, user_id, createdate)
+                       (name, type, user_id, createdate, scalesize)
                        VALUES
-                       (?, ?, ?, ?);
-                       ''',(request.form["trackname"],tracktype, session['currentuser'], date))
+                       (?, ?, ?, ?, ?);
+                       ''',(request.form["trackname"],tracktype, session['currentuser'], date, request.form["scale"]))
             
             get_db().commit()
             
@@ -277,7 +277,7 @@ def create_tables():
 @app.route("/clear_tables")
 def clear_tables():
     c = get_db().cursor()
-    tables.clear(c)
+    tables.clear_tables(c)
     return "cool"                 
                    
 @app.route("/clear_users")

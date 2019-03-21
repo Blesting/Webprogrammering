@@ -45,21 +45,14 @@
                   </div>
                   <div>
                     <label class="form-control container">
-                      <div class="btn-group">1  
-                      <input type="radio" checked="checked" name="radio" >
+                      <div class="btn-group">1
+                      {% for i in range(track[6]) %}
+                      <input type="radio" name="radio" value={{i}} required>
                       <span class="checkmark"></span>
-                      <input type="radio" name="radio" >  
-                      <span class="checkmark"></span>
-                      <input type="radio" name="radio">  
-                      <span class="checkmark"></span>
-                      <input type="radio" name="radio">
-                      <span class="checkmark"></span>
-                      <input type="radio" name="radio">
-                      <span class="checkmark"></span>
-                      <input type="radio" name="radio">
-                      <span class="checkmark"></span>
-                      <input type="radio" name="radio">
-                      <span class="checkmark"></span>5
+                      {% endfor %}
+                      {{ track[6] }}
+                      
+                      
                       </div>
                     </label>
                   </div>
