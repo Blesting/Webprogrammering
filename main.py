@@ -205,13 +205,32 @@ def get_tracks():
 def create_var():  
     
     c = get_db().cursor()
-    
     c.execute('''
+              SELECT type FROM tracks WHERE Id=? 
+              ''',request.args.get("id"))
+    tracktype = c.fetchone()[0]
+    if tracktype == 0:
+        c.execute('''
                INSERT INTO trackvars
-               (track_id, starttime, value, postdate)
+               (track_id, value, postdate)
                VALUES
-               (?, ?, ?, ?);
-               ''',(request.args.get("id"),request.form["dato"], request.form["var"], datetime.datetime.now().date()))
+               (?, ?, ?);
+               ''',(request.args.get("id"), request.form["var"], datetime.datetime.now().date()))
+    elif tracktype == 1:
+        c.execute('''
+               INSERT INTO trackvars
+               (track_id, starttime, postdate)
+               VALUES
+               (?, ?, ?);
+               ''',(request.args.get("id"),request.form["dato"], datetime.datetime.now().date()))
+    elif tracktype == 2:
+        c.execute('''
+               INSERT INTO trackvars
+               (track_id, value, postdate)
+               VALUES
+               (?, ?, ?);
+               ''',(request.args.get("id"), request.form["scale"], datetime.datetime.now().date()))
+    
     
     get_db().commit()
     

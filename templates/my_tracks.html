@@ -47,7 +47,7 @@
                     <label class="form-control container">
                       <div class="btn-group">1
                       {% for i in range(track[6]) %}
-                      <input type="radio" name="radio" value={{i}} required>
+                      <input type="radio" name="scale" value={{i+1}} required>
                       <span class="checkmark"></span>
                       {% endfor %}
                       {{ track[6] }}
