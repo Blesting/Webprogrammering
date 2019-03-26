@@ -1,18 +1,5 @@
 {% extends "layout.html" %}
 {% block content %}
-{% for tc in trackvars %}
-        <article class="media content-section">
-          <div class="media-body">
-            <div class="article-metadata">
-              <a class="mr-2" href="#">{{ tc[0] }}</a>
-              <small class="text-muted">{{ tc[1] }}</small>
-            </div>
-            <h2><a class="article-title" href="#">{{ tc[2] }}</a></h2>
-            <p class="article-content">{{ tc[3] }}</p>
-          </div>
-        </article>
-    {% endfor %}
-    
-    
+<iframe width="700" height="800" frameborder="0" scrolling="no" src="//plot.ly/~blaesting/0.embed"></iframe>        
 
 {% endblock content %}

@@ -6,6 +6,10 @@ from flask import request
 import datetime
 import tables
 
+import plotly.plotly as py
+import plotly.graph_objs as go
+import numpy as np
+
 
 posts = [
         {
@@ -276,15 +280,39 @@ def my_tracks_show():
               SELECT * FROM trackvars WHERE track_id=?
               ''',(request.args.get("id"),))
     trackvars = []
+    dates = []
     for i in c:
-        trackvars.append(i)
-        
-    print(trackvars)
+        trackvars.append(i[4])
+        dates.append(i[3])
+
+    datetest = ["2019-01-01","2019-02-05","2019-03-06","2019-03-14","2019-03-18","2019-03-25","2019-03-26","2019-03-27"]
+    
+    gsnit = []
+    s = 0
+    for i in trackvars:
+        s = s+i
+    s = float(s/len(trackvars))
+    for i in trackvars:
+        gsnit.append(s)
+    
+    # Create a trace
+    trace = go.Scatter(
+        x = datetest,
+        y = trackvars,
+        mode = "lines+markers")
+    
+    trace2 = go.Scatter(
+        x = datetest,
+        y = gsnit,
+        mode = "lines")
+    
+    data = [trace, trace2]
+    
+    py.iplot(data, filename='basic-line')
+    
     return my_render("my_tracks_show.html", trackvars=trackvars)
    
 
-            #TODO grafer i my_tracks. https://plot.ly/python/line-charts/
-            #TODO liste over trackvars
             #TODO https://www.w3schools.com/howto/howto_css_custom_checkbox.asp
 
 @app.route("/create_tables")
