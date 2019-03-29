@@ -8,7 +8,6 @@ import tables
 
 import plotly.plotly as py
 import plotly.graph_objs as go
-import numpy as np
 
 
 posts = [
@@ -70,6 +69,40 @@ def create_user():
         print("----------------------------------users----------------------------------")
         for i in c:
             print(i)
+        c.execute('''
+                       SELECT * FROM users WHERE name=?
+                       ''',(request.form["username"],))
+        for i in c:
+            bid = i[0]
+        
+        print("----bid----")
+        print(bid)
+            
+        date = datetime.datetime.now().date()
+        c.execute('''
+                   INSERT INTO tracks
+                   (name, type, user_id, createdate, unit)
+                   VALUES
+                   (?, ?, ?, ?, ?);
+                   ''',("Cups of coffee",0, bid, date, "Cups"))
+        
+        get_db().commit()
+        c.execute('''
+                   INSERT INTO tracks
+                   (name, type, user_id, createdate)
+                   VALUES
+                   (?, ?, ?, ?);
+                   ''',("Time of wakeup",1, bid, date))
+        
+        get_db().commit()
+        c.execute('''
+                   INSERT INTO tracks
+                   (name, type, user_id, createdate, scalesize)
+                   VALUES
+                   (?, ?, ?, ?, ?);
+                   ''',("Hapiness",2, bid, date, 5))
+        
+        get_db().commit()
     
         return my_render("login.html")
     else:
@@ -90,7 +123,7 @@ def login():
 @app.route('/login_try', methods=['POST'])
 def login_try():
     pw = request.form['password']
-    user = request.form['username']
+    user = [request.form['username']]
 
     if login_success(user, pw):
         ID=get_user_id(user)
@@ -104,7 +137,7 @@ def login_success(user, pw):
     c = get_db().cursor()
     c.execute('''
               SELECT password FROM users WHERE name=?
-              ''',user)
+              ''',(user))
     for i in c:
         if i[0] == pw:
             return True
@@ -285,7 +318,7 @@ def my_tracks_show():
         trackvars.append(i[4])
         dates.append(i[3])
 
-    datetest = ["2019-01-01","2019-02-05","2019-03-06","2019-03-14","2019-03-18","2019-03-25","2019-03-26","2019-03-27"]
+    #datetest = ["2019-01-01","2019-02-05","2019-03-06","2019-03-14","2019-03-18","2019-03-25","2019-03-26","2019-03-27"]
     
     gsnit = []
     s = 0
@@ -297,12 +330,12 @@ def my_tracks_show():
     
     # Create a trace
     trace = go.Scatter(
-        x = datetest,
+        x = dates,
         y = trackvars,
         mode = "lines+markers")
     
     trace2 = go.Scatter(
-        x = datetest,
+        x = dates,
         y = gsnit,
         mode = "lines")
     
@@ -311,6 +344,50 @@ def my_tracks_show():
     py.iplot(data, filename='basic-line')
     
     return my_render("my_tracks_show.html", trackvars=trackvars)
+
+@app.route("/compare_tracks", methods=["POST"])
+def compare_tracks():
+    c = get_db().cursor()
+    trackids = request.form["tracks"]
+    data = []
+    print("-------------------------")
+    print(trackids)
+    for i in trackids:
+        c.execute('''
+              SELECT * FROM trackvars WHERE track_id=?
+              ''',i)
+        trackvars = []
+        dates = []
+        for o in c:
+            trackvars.append(o[4])
+            dates.append(o[3])
+        
+        trace = go.Scatter(
+            x = dates,
+            y = trackvars,
+            mode = "lines+markers")
+        data.append(trace)
+        
+    layout = go.Layout(
+        title='Sammenligning af tracks',
+        yaxis=dict(
+            title='yaxis title'
+        ),
+        yaxis2=dict(
+            title='yaxis2 title',
+            titlefont=dict(
+                color='rgb(148, 103, 189)'
+            ),
+            tickfont=dict(
+                color='rgb(148, 103, 189)'
+            ),
+            overlaying='y',
+            side='right'
+        )
+    )
+    fig = go.Figure(data=data, layout=layout)
+    py.iplot(fig, filename='basic-line')
+    return my_render("my_tracks_show.html")
    
 
             #TODO https://www.w3schools.com/howto/howto_css_custom_checkbox.asp
