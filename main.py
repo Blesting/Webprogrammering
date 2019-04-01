@@ -310,6 +310,11 @@ def delete_track():
 def my_tracks_show():
     c = get_db().cursor()
     c.execute('''
+              SELECT * FROM tracks WHERE Id=?
+              ''',(request.args.get("id"),))
+    for i in c:
+        traceName = i[2]
+    c.execute('''
               SELECT * FROM trackvars WHERE track_id=?
               ''',(request.args.get("id"),))
     trackvars = []
@@ -324,20 +329,20 @@ def my_tracks_show():
     s = 0
     for i in trackvars:
         s = s+i
-    s = float(s/len(trackvars))
-    for i in trackvars:
-        gsnit.append(s)
+        gsnit.append(s/i-1)
     
     # Create a trace
     trace = go.Scatter(
         x = dates,
         y = trackvars,
-        mode = "lines+markers")
+        mode = "lines+markers",
+        name = traceName)
     
     trace2 = go.Scatter(
         x = dates,
         y = gsnit,
-        mode = "lines")
+        mode = "lines",
+        name = "Gennemsnit")
     
     data = [trace, trace2]
     
