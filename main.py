@@ -57,10 +57,10 @@ def create_user():
     if x == 0:
         c.execute('''
                    INSERT INTO users
-                   (name, password, email)
+                   (name, password, email, gender, age)
                    VALUES
-                   (?, ?, ?);
-                   ''',(request.form["username"],request.form["password"],request.form["email"]))
+                   (?, ?, ?, ?, ?);
+                   ''',(request.form["username"],request.form["password"],request.form["email"],request.form["køn"],request.form["age"]))
         
         get_db().commit()
         c.execute('''
@@ -74,9 +74,6 @@ def create_user():
                        ''',(request.form["username"],))
         for i in c:
             bid = i[0]
-        
-        print("----bid----")
-        print(bid)
             
         date = datetime.datetime.now().date()
         c.execute('''
@@ -231,7 +228,7 @@ def get_tracks():
     if 'currentuser' in session:
         c.execute('''
               SELECT * FROM tracks WHERE user_id=?
-              ''',str(session['currentuser']))
+              ''',(session['currentuser'],))
     tracks = []
     for track in c:
         tracks.append(track)
@@ -393,8 +390,38 @@ def compare_tracks():
     fig = go.Figure(data=data, layout=layout)
     py.iplot(fig, filename='basic-line')
     return my_render("my_tracks_show.html")
-   
 
+@app.route("/user")
+def user():
+    c = get_db().cursor()
+    c.execute('''
+              SELECT * FROM users WHERE Id=?
+              ''',(session['currentuser'],))
+    userinfo = []
+    for i in c:
+        userinfo = i
+    print(userinfo)
+    return my_render("user.html", userinfo = userinfo)
+
+@app.route("/update_user", methods=["POST"])
+def update_user():
+    c = get_db().cursor()
+    c.execute('''
+              UPDATE users 
+              SET name=?,age=?,gender=?,password=?,email=? 
+              WHERE Id=?;
+              ''',(request.form["username"],request.form["age"],request.form["sex"],request.form["password"], request.form["email"],session['currentuser']))
+    get_db().commit()
+    
+    c.execute('''
+              SELECT * FROM users WHERE Id=?
+              ''',(session['currentuser'],))
+    userinfo = []
+    for i in c:
+        userinfo = i
+    print(userinfo)
+
+    return my_render("user.html", userinfo = userinfo)
             #TODO https://www.w3schools.com/howto/howto_css_custom_checkbox.asp
 
 @app.route("/create_tables")

@@ -1,0 +1,47 @@
+{% extends "layout.html" %}
+{% block content %}
+
+<form onsubmit="return submit(this);" id="update" name="login_form" role="form" style="display: block;" action="update_user" method="post">
+    <h2>Din bruger</h2>
+        
+      <div class="form-group">
+         <label for="username">Navn:</label>
+         <input type="text" name="username" id="username" tabindex="1" class="form-control" placeholder={{userinfo[1] }} value={{userinfo[1] }}>
+      </div>
+      <div class="form-group">
+         <label for="email">E-mail:</label>
+         <input type="email" name="email" id="email" tabindex="2" class="form-control" placeholder={{userinfo[5] }} value={{userinfo[5] }}>
+      </div>
+      <div class="form-group">
+         <label for="age">Køn:</label>
+         <select name="age" id="age" tabindex="3" class="form-control" value={{ userinfo[3] }}>
+          {% if userinfo[3] == 0 %}
+          <option hidden="">Mand</option>
+          {% elif userinfo[3] == 1 %}
+          <option hidden="">Kvinde</option>
+          {% endif %}
+          <option value="0">Mand</option>
+          <option value="1">Kvinde</option>
+        </select>      
+      </div>
+      <div class="form-group">
+         <label for="sex">Alder:</label>
+         <input type="number" name="sex" id="sex" tabindex="4" class="form-control" placeholder={{userinfo[2] }} value={{userinfo[2] }}>
+      </div>
+      <div class="form-group">
+         <label for="password" class="">password:</label>
+         <input type="text" name="password" id="password" tabindex="1" class="form-control" placeholder={{userinfo[4] }} value={{userinfo[4] }}>
+      </div>
+
+      <div class="col-xs-6 form-group pull-right">
+        <button type="submit" name="update" id="update" tabindex="4" class="form-control btn btn-login alert-info">Opdater </button>
+      </div>
+    </form>
+    
+    <script>
+    function submit() {
+      return confirm("Press a button!");
+      }
+    </script>
+
+{% endblock content %}
