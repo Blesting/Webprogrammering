@@ -97,7 +97,7 @@ def create_user():
                    (name, type, user_id, createdate, scalesize)
                    VALUES
                    (?, ?, ?, ?, ?);
-                   ''',("Hapiness",2, bid, date, 5))
+                   ''',("Happiness",2, bid, date, 5))
         
         get_db().commit()
     
@@ -241,7 +241,7 @@ def create_var():
     c = get_db().cursor()
     c.execute('''
               SELECT type FROM tracks WHERE Id=? 
-              ''',request.args.get("id"))
+              ''',(request.args.get("id"),))
     tracktype = c.fetchone()[0]
     if tracktype == 0:
         c.execute('''
