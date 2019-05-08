@@ -157,7 +157,7 @@ def my_render(template, **kwargs):
 
 @app.route('/create_track')
 def create_track():
-    return my_render("track.html", )
+    return my_render("create_track.html", )
 
 @app.route("/create_track_real", methods=["POST"])
 def create_track_real(): 
@@ -217,7 +217,7 @@ def create_track_real():
     
         return my_render("my_tracks.html")
     else:
-        return my_render('track.html', success = False)
+        return my_render('create_track.html', success = False)
     
 @app.route("/my_tracks")
 def my_tracks():
