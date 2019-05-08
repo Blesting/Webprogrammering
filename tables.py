@@ -1,9 +1,4 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Thu Mar 14 13:01:08 2019
 
-@author: Nestea
-"""
 
 def clear_tables(c):
     try:
