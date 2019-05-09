@@ -424,7 +424,6 @@ def update_user():
     print(userinfo)
 
     return my_render("user.html", userinfo = userinfo)
-            #TODO https://www.w3schools.com/howto/howto_css_custom_checkbox.asp
 
 @app.route("/create_tables")
 def create_tables():
