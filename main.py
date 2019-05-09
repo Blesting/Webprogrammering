@@ -324,9 +324,11 @@ def my_tracks_show():
     
     gsnit = []
     s = 0
+    t = 0
     for i in trackvars:
         s = s+i
-        gsnit.append(s/i-1)
+        t += 1
+        gsnit.append(s/t)
     
     # Create a trace
     trace = go.Scatter(
