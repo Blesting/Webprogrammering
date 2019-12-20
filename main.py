@@ -6,7 +6,8 @@ from flask import request
 import datetime
 import tables
 
-import plotly.plotly as py
+import chart_studio.plotly as py
+import chart_studio.tools as tls
 import plotly.graph_objs as go
 
 
@@ -331,23 +332,25 @@ def my_tracks_show():
         gsnit.append(s/t)
     
     # Create a trace
-    trace = go.Scatter(
+    fig = go.Figure()
+    fig.add_trace(go.Scatter(
         x = dates,
         y = trackvars,
         mode = "lines+markers",
         name = traceName)
+    )
     
-    trace2 = go.Scatter(
+    
+    fig.add_trace(go.Scatter(
         x = dates,
         y = gsnit,
         mode = "lines",
-        name = "Gennemsnit")
+        name = "Gennemsnit"))
     
-    data = [trace, trace2]
-    
-    py.iplot(data, filename='basic-line')
-    
-    return my_render("my_tracks_show.html", trackvars=trackvars)
+    fig.get_embed()
+    #tls.get_embed("https://plot.ly/~blaesting/0")
+
+    return my_render("my_tracks_show.html")
 
 @app.route("/compare_tracks", methods=["POST"])
 def compare_tracks():
